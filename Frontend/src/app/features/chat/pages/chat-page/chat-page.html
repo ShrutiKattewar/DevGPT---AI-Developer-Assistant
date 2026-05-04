@@ -1,0 +1,66 @@
+<div class="container">
+  <div class="sidebar" [class.open]="isSidebarOpen">
+    <button (click)="chatService.newChat()">
+      <span class="material-symbols-outlined"> new_window </span> New Chat
+    </button>
+
+    <button><span class="material-symbols-outlined"> search </span> Search Chats</button>
+
+    <div class="recents">
+      <h3>Recents</h3>
+      <hr style="border-bottom: 0.1px; margin-top: 0.2rem" />
+      <div
+        *ngFor="let chat of chatService.chats"
+        (click)="chatService.openChat(chat.id)"
+        [class.active]="chat.id === chatService.currentChatId"
+        class="chat-item"
+      >
+        <span class="chat-title">{{ chat.title }}</span>
+        <button
+          class="delete-btn"
+          (click)="chatService.deleteChat(chat.id); $event.stopPropagation()"
+        >
+          <span class="material-symbols-outlined"> delete </span>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Overlay (mobile only) -->
+  <div class="overlay" *ngIf="isSidebarOpen" (click)="toggleSidebar()"></div>
+
+  <div class="content">
+    <div class="header">
+      <button class="toggle-btn" (click)="toggleSidebar()">
+        <span class="material-symbols-outlined"> menu </span>
+      </button>
+      <h2>DevGPT</h2>
+      <button class="login-btn">Login</button>
+    </div>
+    <div class="hero" *ngIf="!(chatService.messages$ | async)?.length">
+      <h2>Hi! Shruti 👋</h2>
+      <h2>How can I help you with?</h2>
+    </div>
+
+    <div class="chat-window" *ngIf="(chatService.messages$ | async)?.length">
+      <app-chat-window [messages]="chatService.messages$ | async"> </app-chat-window>
+    </div>
+
+    <div class="input-wrapper">
+      <app-chat-input
+        (send)="onSendMessage($event)"
+        [isLoading]="(isLoading$ | async) ?? false"
+      ></app-chat-input>
+      <div class="modes">
+        <button
+          *ngFor="let m of modes"
+          [disabled]="(isLoading$ | async) ?? false"
+          [class.active]="mode === m.key"
+          (click)="mode = m.key"
+        >
+          {{ m.label }}
+        </button>
+      </div>
+    </div>
+  </div>
+</div>

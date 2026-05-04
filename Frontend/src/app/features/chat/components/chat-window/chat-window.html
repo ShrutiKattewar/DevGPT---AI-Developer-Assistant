@@ -1,0 +1,23 @@
+<div #container class="container">
+  <div *ngFor="let msg of messages" [ngClass]="msg.sender">
+    <div class="bubble">
+      <div *ngIf="msg.sender === 'user'" class="user-message">{{ msg.text }}</div>
+      <div *ngIf="msg.sender === 'bot'" [innerHTML]="formatMessage(msg.text)"></div>
+    </div>
+
+    <div class="actions" *ngIf="msg.sender === 'bot' && !(isLoading$ | async)">
+      <button title="Copy" (click)="copyText(msg.text, $event)">
+        <span class="material-symbols-outlined copy"> content_copy </span>
+      </button>
+
+      <button title="Like"><span class="material-symbols-outlined">thumb_up</span></button>
+
+      <button title="Dislike"><span class="material-symbols-outlined">thumb_down</span></button>
+
+      <button title="Retry"><span class="material-symbols-outlined">restart_alt</span></button>
+
+      <button title="More"><span class="material-symbols-outlined">more_horiz</span></button>
+    </div>
+  </div>
+  <div #bottom></div>
+</div>
