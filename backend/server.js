@@ -8,7 +8,14 @@ dotenv.config();
 
 const app = express();
 
-app.use(cors());
+app.use(
+  cors({
+    origin: [
+      "http://localhost:4200",
+      "https://devgpt-ai-developer-assistant-backend.onrender.com",
+    ],
+  }),
+);
 app.use(express.json());
 
 // Initialize OpenAI client with API key from environment
