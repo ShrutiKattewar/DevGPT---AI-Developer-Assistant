@@ -11,9 +11,11 @@ const app = express();
 app.use(
   cors({
     origin: [
-      "http://localhost:4200",
-      "https://devgpt-ai-developer-assistant-backend.onrender.com",
+      "http://localhost:4200", // local dev
+      "https://devgpt-ai-developer-assistant-frontend.onrender.com", // deployed frontend
     ],
+    methods: ["GET", "POST"],
+    credentials: true,
   }),
 );
 app.use(express.json());
