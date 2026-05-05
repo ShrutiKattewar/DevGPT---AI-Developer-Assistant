@@ -41,7 +41,7 @@ app.post("/chat", async (req, res) => {
     res.setHeader("Transfer-Encoding", "chunked");
     res.setHeader("Cache-Control", "no-cache");
     res.setHeader("Connection", "keep-alive");
-
+    res.setHeader("X-Accel-Buffering", "no");
     res.flushHeaders();
 
     const stream = await openai.chat.completions.create({
