@@ -10,14 +10,10 @@ const app = express();
 
 app.use(
   cors({
-    origin: [
-      "http://localhost:4200", // local dev
-      "https://devgpt-ai-developer-assistant-frontend.onrender.com", // deployed frontend
-    ],
-    methods: ["GET", "POST"],
-    credentials: true,
+    origin: ["http://localhost:4200", "https://your-vercel-app.vercel.app"],
   }),
 );
+
 app.use(express.json());
 
 // Initialize OpenAI client with API key from environment
@@ -37,12 +33,8 @@ app.post("/chat", async (req, res) => {
     let systemPrompt = selectedMode.prompt || "You are a helpful AI assistant.";
 
     // Enable streaming response to send data in chunks (better UX, lower latency)
-    res.setHeader("Content-Type", "text/plain; charset=utf-8");
+    res.setHeader("Content-Type", "text/plain");
     res.setHeader("Transfer-Encoding", "chunked");
-    res.setHeader("Cache-Control", "no-cache");
-    res.setHeader("Connection", "keep-alive");
-    res.setHeader("X-Accel-Buffering", "no");
-    res.flushHeaders();
 
     const stream = await openai.chat.completions.create({
       model: "gpt-4o-mini",
