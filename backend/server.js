@@ -33,8 +33,13 @@ app.post("/chat", async (req, res) => {
     let systemPrompt = selectedMode.prompt || "You are a helpful AI assistant.";
 
     // Enable streaming response to send data in chunks (better UX, lower latency)
-    res.setHeader("Content-Type", "text/plain");
+    res.setHeader("Content-Type", "text/plain; charset=utf-8");
     res.setHeader("Transfer-Encoding", "chunked");
+    res.setHeader("Cache-Control", "no-cache");
+    res.setHeader("Connection", "keep-alive");
+    res.setHeader("X-Accel-Buffering", "no"); // ⭐ critical
+
+    res.flushHeaders(); // ⭐ ADD THIS
 
     const stream = await openai.chat.completions.create({
       model: "gpt-4o-mini",
