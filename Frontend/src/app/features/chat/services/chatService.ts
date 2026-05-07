@@ -77,6 +77,25 @@ export class ChatService {
     }));
   }
 
+  // Fake streaming typing effect
+  typeEffect(botMsg: Message, text: string, chat: ChatItem) {
+    let i = 0;
+
+    const interval = setInterval(() => {
+      if (i >= text.length) {
+        clearInterval(interval);
+
+        this.isLoadingSubject.next(false);
+        this.saveToLocalStorage();
+
+        return;
+      }
+      botMsg.text += text[i];
+      this.messagesSubject.next([...chat.messages]);
+      i++;
+    }, 10);
+  }
+
   // Handles sending message and streaming AI response
   sendMessage(message: string, mode: string) {
     if (!message.trim()) return;
@@ -126,22 +145,10 @@ export class ChatService {
           }),
         });
 
-        const reader = response.body?.getReader();
-        const decoder = new TextDecoder();
+        const data = await response.json();
 
-        // Read streamed chunks and update UI in real-time
-        while (true) {
-          const { done, value } = await reader!.read();
-          if (done) break;
-
-          const chunk = decoder.decode(value);
-          botMsg.text += chunk;
-
-          this.messagesSubject.next([...chat.messages]); // 🔥 live update
-        }
-
-        this.isLoadingSubject.next(false);
-        this.saveToLocalStorage();
+        // Fake streaming
+        this.typeEffect(botMsg, data.reply, chat);
       } catch (error) {
         // handle API failure
         botMsg.text = '⚠️ Server error';
