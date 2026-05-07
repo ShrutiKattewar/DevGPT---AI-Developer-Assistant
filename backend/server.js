@@ -32,32 +32,16 @@ app.post("/chat", async (req, res) => {
     // Fallback to default assistant behavior if mode is not provided
     let systemPrompt = selectedMode.prompt || "You are a helpful AI assistant.";
 
-    // Enable streaming response to send data in chunks (better UX, lower latency)
-    res.setHeader("Content-Type", "text/plain; charset=utf-8");
-    res.setHeader("Transfer-Encoding", "chunked");
-    res.setHeader("Cache-Control", "no-cache");
-    res.setHeader("Connection", "keep-alive");
-    res.setHeader("X-Accel-Buffering", "no"); // ⭐ critical
-
-    res.flushHeaders(); // ⭐ ADD THIS
-
-    const stream = await openai.chat.completions.create({
+    const response = await openai.chat.completions.create({
       model: "gpt-4o-mini",
       messages: [{ role: "system", content: systemPrompt }, ...messages],
       temperature: selectedMode.temperature || 0.5,
       max_tokens: selectedMode.max_tokens || 800,
-      stream: true, // ✅ enable streaming
     });
 
-    // Stream response chunks to client as they arrive
-    for await (const chunk of stream) {
-      const content = chunk.choices?.[0]?.delta?.content;
-      if (content) {
-        res.write(content); // 🔥 send chunk
-      }
-    }
-
-    res.end();
+    res.json({
+      reply: response.choices[0].message.content,
+    });
   } catch (error) {
     // Handle API or server errors
     console.error(error);
