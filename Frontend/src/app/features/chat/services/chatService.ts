@@ -151,7 +151,8 @@ export class ChatService {
         this.typeEffect(botMsg, data.reply, chat);
       } catch (error) {
         // handle API failure
-        botMsg.text = '⚠️ Server error';
+        // botMsg.text = '⚠️ Server error';
+        botMsg.text = `${String(error)}`;
         this.messagesSubject.next([...chat.messages]);
         this.isLoadingSubject.next(false);
       }
