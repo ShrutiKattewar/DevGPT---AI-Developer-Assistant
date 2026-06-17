@@ -8,10 +8,10 @@ dotenv.config();
 
 const app = express();
 
-app.use(
-  cors({
-    origin: ["http://localhost:4200", "https://dev-gpt-ai-developer-assistant.vercel.app"],
-  }),
+app.use(cors()
+  // cors({
+  //   origin: ["http://localhost:4200", "https://dev-gpt-ai-developer-assistant.vercel.app"],
+  // }),
 );
 
 app.use(express.json());
