@@ -10,7 +10,7 @@ const app = express();
 
 app.use(
   cors({
-    origin: ["http://localhost:4200", "https://dev-gpt-ai-developer-assistant.vercel.app/"],
+    origin: ["http://localhost:4200", "https://dev-gpt-ai-developer-assistant.vercel.app"],
   }),
 );
 
