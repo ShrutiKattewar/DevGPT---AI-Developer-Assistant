@@ -11,7 +11,7 @@
       <hr style="border-bottom: 0.1px; margin-top: 0.2rem" />
       <div
         *ngFor="let chat of chatService.chats"
-        (click)="chatService.openChat(chat.id)"
+        (click)="openChat(chat.id)"
         [class.active]="chat.id === chatService.currentChatId"
         class="chat-item"
       >

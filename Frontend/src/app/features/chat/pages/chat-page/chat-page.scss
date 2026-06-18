@@ -155,6 +155,7 @@
       flex-direction: row;
       justify-content: center;
       margin-top: 0.5rem;
+      flex-wrap: wrap;
     }
 
     .modes button {
@@ -228,5 +229,18 @@
 
   .content {
     width: 100%;
+  }
+}
+
+@media (max-width: 480px) {
+  .container {
+    width: 100%;
+    max-width: 500px;
+  }
+
+  .content {
+    .chat-window {
+      width: 85%;
+    }
   }
 }

@@ -57,7 +57,13 @@
   }
 
   .send-btn .material-symbols-outlined {
-    color: #000; 
+    color: #000;
     font-size: 1rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .input-box {
+    width: 83%;
   }
 }

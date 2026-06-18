@@ -29,6 +29,11 @@ export class ChatPage {
     this.isLoading$ = this.chatService.isLoading$;
   }
 
+  openChat(id: any) {
+    this.isSidebarOpen = false;
+    this.chatService.openChat(id);
+  }
+
   onSendMessage(message: string) {
     this.shouldAutoScroll = true; // 🔥 force scroll
     this.chatService.sendMessage(message, this.mode);
