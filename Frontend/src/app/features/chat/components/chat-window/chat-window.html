@@ -2,7 +2,17 @@
   <div *ngFor="let msg of messages" [ngClass]="msg.sender">
     <div class="bubble">
       <div *ngIf="msg.sender === 'user'" class="user-message">{{ msg.text }}</div>
-      <div *ngIf="msg.sender === 'bot'" [innerHTML]="formatMessage(msg.text)"></div>
+      <!-- <div *ngIf="msg.sender === 'bot'" [innerHTML]="formatMessage(msg.text)"></div> -->
+
+      <ng-container *ngIf="msg.sender === 'bot'">
+        <div *ngIf="msg.loading" class="typing">
+          <span></span>
+          <span></span>
+          <span></span>
+        </div>
+
+        <div *ngIf="!msg.loading" [innerHTML]="formatMessage(msg.text)"></div>
+      </ng-container>
     </div>
 
     <div class="actions" *ngIf="msg.sender === 'bot' && !(isLoading$ | async)">

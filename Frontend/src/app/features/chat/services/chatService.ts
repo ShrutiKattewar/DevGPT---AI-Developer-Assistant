@@ -78,24 +78,41 @@ export class ChatService {
   }
 
   // Fake streaming typing effect
+  // typeEffect(botMsg: Message, text: string, chat: ChatItem) {
+  //   let i = 0;
+
+  //   const interval = setInterval(() => {
+  //     if (i >= text.length) {
+  //       clearInterval(interval);
+
+  //       this.isLoadingSubject.next(false);
+  //       this.saveToLocalStorage();
+
+  //       return;
+  //     }
+  //     botMsg.text += text[i];
+  //     this.messagesSubject.next([...chat.messages]);
+  //     i++;
+  //   }, 5);
+  // }
   typeEffect(botMsg: Message, text: string, chat: ChatItem) {
     let i = 0;
+    const chunkSize = 4;
 
     const interval = setInterval(() => {
       if (i >= text.length) {
         clearInterval(interval);
-
         this.isLoadingSubject.next(false);
         this.saveToLocalStorage();
-
         return;
       }
-      botMsg.text += text[i];
+
+      botMsg.text += text.slice(i, i + chunkSize);
       this.messagesSubject.next([...chat.messages]);
-      i++;
+
+      i += chunkSize;
     }, 10);
   }
-
   // Handles sending message and streaming AI response
   sendMessage(message: string, mode: string) {
     if (!message.trim()) return;
@@ -129,7 +146,11 @@ export class ChatService {
     const openAIMessages = this.mapToOpenAIMessages(chat.messages).slice(-10);
 
     // Add placeholder bot message for streaming response
-    const botMsg: Message = { text: '', sender: 'bot' };
+    const botMsg: Message = {
+      text: '',
+      sender: 'bot',
+      loading: true,
+    };
     chat.messages.push(botMsg);
     this.messagesSubject.next([...chat.messages]);
     this.isLoadingSubject.next(true);
@@ -147,6 +168,7 @@ export class ChatService {
 
         const data = await response.json();
 
+        botMsg.loading = false;
         // Fake streaming
         this.typeEffect(botMsg, data.reply, chat);
       } catch (error) {
